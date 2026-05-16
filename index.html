@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FocusFuel</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-rose-50 font-[Poppins] text-rose-500">
+
+<div class="flex min-h-screen">
+
+<!-- SIDEBAR -->
+<aside class="w-64 bg-white p-8 shadow-xl border-r border-rose-100 text-rose-500">
+
+    <div class="mb-6 flex flex-col items-center">
+
+        <img 
+            src="images/logo.png.png" 
+            alt="FocusFuel Logo"
+            class="w-80 h-auto drop-shadow-md"
+        >
+
+    </div>
+
+   <nav class="space-y-4">
+
+    <div id="nav-dashboard"
+        class="flex items-center gap-3 p-3 bg-rose-100 rounded-xl cursor-pointer text-rose-500"
+        onclick="showSection('dashboard')">
+        <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
+        Dashboard
+    </div>
+
+    <!-- FIXED ICON HERE -->
+    <div id="nav-recommendations"
+        class="flex items-center gap-3 p-3 hover:bg-rose-50 rounded-xl cursor-pointer text-rose-400"
+        onclick="showSection('recommendations')">
+        <i data-lucide="compass" class="w-5 h-5"></i>
+        Recommendations
+    </div>
+
+    <div id="nav-history"
+        class="flex items-center gap-3 p-3 hover:bg-rose-50 rounded-xl cursor-pointer text-rose-400"
+        onclick="showSection('history')">
+        <i data-lucide="clock" class="w-5 h-5"></i>
+        History
+    </div>
+
+</nav>
+</aside>
+
+<!-- MAIN CONTENT -->
+<main class="flex-1 p-10 max-w-7xl">
+
+    <div class="mb-8">
+        <h2 class="text-4xl font-bold bg-gradient-to-r from-rose-400 via-pink-400 to-orange-300 bg-clip-text text-transparent">
+            Student Productivity Dashboard
+        </h2>
+
+        <p class="text-rose-400 mt-2">
+            Monitor your study habits and avoid burnout.
+        </p>
+    </div>
+
+    <section id="dashboardSection">
+
+        <div class="bg-white p-6 rounded-3xl shadow-lg mb-6 border border-rose-100">
+
+            <h2 class="text-2xl font-bold mb-6 bg-gradient-to-r from-rose-400 via-pink-400 to-orange-300 bg-clip-text text-transparent">
+                Log Today's Study Data
+            </h2>
+
+            <input id="studyHours" type="number" placeholder="Study Hours"
+                class="w-full p-4 border border-rose-100 mb-4 rounded-2xl focus:outline-none focus:ring-2 focus:ring-rose-300 bg-rose-50 placeholder-rose-300">
+
+            <input id="sleepHours" type="number" placeholder="Sleep Hours"
+                class="w-full p-4 border border-rose-100 mb-4 rounded-2xl focus:outline-none focus:ring-2 focus:ring-rose-300 bg-rose-50 placeholder-rose-300">
+
+            <input id="breaksTaken" type="number" placeholder="Breaks Taken"
+                class="w-full p-4 border border-rose-100 mb-4 rounded-2xl focus:outline-none focus:ring-2 focus:ring-rose-300 bg-rose-50 placeholder-rose-300">
+
+            <input id="stressLevel" type="number" placeholder="Stress Level"
+                class="w-full p-4 border border-rose-100 mb-4 rounded-2xl focus:outline-none focus:ring-2 focus:ring-rose-300 bg-rose-50 placeholder-rose-300">
+
+            <button id="analyzeBtn"
+                class="bg-rose-400 text-white px-8 py-4 rounded-2xl hover:bg-rose-500 transition shadow-lg hover:scale-105">
+                Analyze My Day
+            </button>
+
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+            <div class="bg-white p-6 rounded-3xl shadow-lg hover:shadow-xl transition border border-rose-100">
+                <h3 class="text-rose-400 text-sm">Burnout Risk</h3>
+                <p id="burnoutOutput" class="text-3xl font-bold mt-3">-</p>
+            </div>
+
+            <div class="bg-white p-6 rounded-3xl shadow-lg hover:shadow-xl transition border border-rose-100">
+                <h3 class="text-rose-400 text-sm">Productivity Score</h3>
+                <p id="productivityOutput" class="text-3xl font-bold mt-3">-</p>
+            </div>
+
+            <div class="bg-white p-6 rounded-3xl shadow-lg hover:shadow-xl transition border border-rose-100">
+                <h3 class="text-rose-400 text-sm">Study Hours</h3>
+                <p id="studyOutput" class="text-3xl font-bold mt-3">-</p>
+            </div>
+
+        </div>
+
+    </section>
+
+    <section id="recommendationsSection" class="hidden bg-white p-8 rounded-2xl shadow-md border border-rose-100">
+        <h2 class="text-2xl font-bold mb-4">Recommendations</h2>
+        <p id="recommendationOutput">-</p>
+    </section>
+
+    <section id="historySection" class="hidden bg-white p-8 rounded-2xl shadow-md border border-rose-100">
+        <h2 class="text-2xl font-bold mb-4">Recent Logs</h2>
+        <p id="historyOutput"></p>
+    </section>
+
+</main>
+
+</div>
+
+<!-- ✅ THIS IS WHAT WAS MISSING -->
+<script>
+    lucide.createIcons();
+</script>
+
+<script src="ff.js"></script>
+
+<script>
+function showSection(section) {
+
+    document.getElementById("dashboardSection").classList.add("hidden");
+    document.getElementById("recommendationsSection").classList.add("hidden");
+    document.getElementById("historySection").classList.add("hidden");
+
+    document.getElementById(section + "Section").classList.remove("hidden");
+
+    document.getElementById("nav-dashboard").classList.remove("bg-rose-100");
+    document.getElementById("nav-recommendations").classList.remove("bg-rose-100");
+    document.getElementById("nav-history").classList.remove("bg-rose-100");
+
+    document.getElementById("nav-" + section).classList.add("bg-rose-100");
+}
+</script>
+
+</body>
+</html>
