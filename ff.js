@@ -1,127 +1,100 @@
-let logs = JSON.parse(localStorage.getItem("focusfuelLogs")) || [];
-
-
+const API_URL = "http://localhost:5000/api/logs";
 
 document.getElementById("analyzeBtn").addEventListener("click", function () {
+    const studyHoursInput = document.getElementById("studyHours").value.trim();
+    const sleepHoursInput = document.getElementById("sleepHours").value.trim();
+    const breaksTakenInput = document.getElementById("breaksTaken").value.trim();
+    const stressLevelInput = document.getElementById("stressLevel").value.trim();
 
-    // INPUT VALUES
-    let study = Number(document.getElementById("studyHours").value);
-    let sleep = Number(document.getElementById("sleepHours").value);
-    let breaks = Number(document.getElementById("breaksTaken").value);
-    let stress = Number(document.getElementById("stressLevel").value);
-
-    // VALIDATION
-    if (!study || !sleep || !breaks || !stress) {
+    // Validate inputs - must be filled, numeric, and non-negative (0 is allowed)
+    if (studyHoursInput === "" || sleepHoursInput === "" || breaksTakenInput === "" || stressLevelInput === "") {
         alert("Please fill in all fields properly.");
         return;
     }
 
-    // BURNOUT LOGIC
-    let burnout = "";
+    const study = Number(studyHoursInput);
+    const sleep = Number(sleepHoursInput);
+    const breaks = Number(breaksTakenInput);
+    const stress = Number(stressLevelInput);
 
-    if (sleep < 5 && stress > 7 && study > 6) {
-        burnout = "High";
-    } 
-    else if (sleep < 6 || stress > 6 || study > 8) {
-        burnout = "Moderate";
-    } 
-    else {
-        burnout = "Low";
+    if (isNaN(study) || isNaN(sleep) || isNaN(breaks) || isNaN(stress) ||
+        study < 0 || sleep < 0 || breaks < 0 || stress < 0) {
+        alert("Please fill in all fields properly.");
+        return;
     }
 
-    // PRODUCTIVITY SCORE
-    let productivity = Math.round(
-        (sleep * 12) + (study * 8) + (breaks * 4) - (stress * 10)
-    );
+    // POST request to backend API
+    fetch(API_URL, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ study, sleep, breaks, stress })
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error("Unable to save your study log.");
+        }
+        return response.json();
+    })
+    .then(data => {
+        // Update dashboard outputs with calculated backend data
+        document.getElementById("burnoutOutput").textContent = data.burnout;
+        document.getElementById("productivityOutput").textContent = data.productivity + "%";
+        document.getElementById("studyOutput").textContent = data.study + " hrs";
+        document.getElementById("recommendationOutput").textContent = data.recommendation;
 
-    if (productivity < 0) productivity = 0;
-    if (productivity > 100) productivity = 100;
+        // Reset input fields
+        document.getElementById("studyHours").value = "";
+        document.getElementById("sleepHours").value = "";
+        document.getElementById("breaksTaken").value = "";
+        document.getElementById("stressLevel").value = "";
 
-    // RECOMMENDATIONS
-    let recommendation = "";
-
-    if (burnout === "High") {
-        recommendation = "High burnout detected. Reduce study load and prioritize sleep immediately.";
-    } 
-    else if (burnout === "Moderate") {
-        recommendation = "You're slightly imbalanced. Improve sleep and take more structured breaks.";
-    } 
-    else {
-        recommendation = "Great balance! Keep maintaining your current routine.";
-    }
-
-    //  SAVE LOG
-   logs.push({
-    study: study,
-    sleep: sleep,
-    breaks: breaks,
-    stress: stress,
-    burnout: burnout,
-    productivity: productivity
+        // Re-render history logs from backend
+        renderLogs();
+    })
+    .catch(error => {
+        console.error("Error submitting study log:", error);
+        alert("Unable to save your study log. Please make sure the server is running.");
+    });
 });
-
-// keeps only last 4 logs
-if (logs.length > 4) {
-    logs = logs.slice(-4);
-}
-
-
-    localStorage.setItem("focusfuelLogs", JSON.stringify(logs));
-
-  
-    document.getElementById("burnoutOutput").textContent = burnout;
-    document.getElementById("productivityOutput").textContent = productivity + "%";
-    document.getElementById("studyOutput").textContent = study + " hrs";
-    document.getElementById("recommendationOutput").textContent = recommendation;
-
-    // RESET INPUTS
-    document.getElementById("studyHours").value = "";
-    document.getElementById("sleepHours").value = "";
-    document.getElementById("breaksTaken").value = "";
-    document.getElementById("stressLevel").value = "";
-
-    // RE-RENDER HISTORY
-    renderLogs();
-});
-
-
-
 
 function renderLogs() {
+    const historyBox = document.getElementById("historyOutput");
 
-    let historyBox = document.getElementById("historyOutput");
+    // GET request to retrieve all logs from backend
+    fetch(API_URL)
+    .then(response => {
+        if (!response.ok) {
+            throw new Error("Unable to retrieve history.");
+        }
+        return response.json();
+    })
+    .then(data => {
+        historyBox.innerHTML = "";
 
-    historyBox.innerHTML = "";
-
-    logs.slice().reverse().forEach((log, index) => {
-
-        historyBox.innerHTML += `
-            <div class="border-b py-2 text-sm text-gray-600">
-                Entry ${logs.length - index} → 
-                Study: ${log.study}h | Sleep: ${log.sleep}h | Breaks: ${log.breaks} | Stress: ${log.stress} | Burnout: ${log.burnout} | Score: ${log.productivity}%
+        // Render log entries, maintaining newest first order returned by the API
+        data.forEach((log, index) => {
+            const entryNum = data.length - index;
+            historyBox.innerHTML += `
+                <div class="border-b py-2 text-sm text-gray-600">
+                    Entry ${entryNum} → 
+                    Study: ${log.study}h | Sleep: ${log.sleep}h | Breaks: ${log.breaks} | Stress: ${log.stress} | Burnout: ${log.burnout} | Score: ${log.productivity}%
+                </div>
+            `;
+        });
+    })
+    .catch(error => {
+        console.error("Error rendering history logs:", error);
+        historyBox.innerHTML = `
+            <div class="text-rose-400 py-2 text-sm">
+                Unable to load study history. Please make sure the server is running.
             </div>
         `;
     });
 }
 
-
-
+// Initial load to retrieve logs on page refresh
 window.addEventListener("load", function () {
     renderLogs();
 });
-
-
-
-
-function showSection(section) {
-
-    document.getElementById("dashboardSection").classList.add("hidden");
-    document.getElementById("recommendationsSection").classList.add("hidden");
-    document.getElementById("historySection").classList.add("hidden");
-
-    const target = document.getElementById(section + "Section");
-
-    if (target) {
-        target.classList.remove("hidden");
-    }
-}
