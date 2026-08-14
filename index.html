@@ -3,134 +3,304 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FocusFuel</title>
+    <title>FocusFuel — Student Productivity & Wellbeing Cabin</title>
 
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="ff.css">
+    
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              focus: {
+                50: '#f3f7f5',
+                100: '#e2ece8',
+                200: '#c5d9d1',
+                300: '#9cbdb0',
+                400: '#6f9b8c',
+                500: '#58857b', /* Calming Sage */
+                600: '#436860',
+                700: '#38554f',
+                800: '#2f4641',
+                900: '#2a3b37',
+              },
+              fuel: {
+                50: '#fffbf0',
+                100: '#fef3d2',
+                200: '#fde2a3',
+                300: '#fcc76a',
+                400: '#faab32',
+                500: '#f48e1b', /* Energizing Amber */
+                600: '#d77110',
+                700: '#b35411',
+                800: '#914214',
+                900: '#773715',
+              },
+              cozy: {
+                50: '#fbfaf7',
+                100: '#f3ede0',
+                200: '#e5dbca',
+                300: '#d0bfab',
+                400: '#b49e87',
+                500: '#9e856c',
+              }
+            },
+            fontFamily: {
+              sans: ['Outfit', 'Poppins', 'sans-serif'],
+            }
+          }
+        }
+      }
+    </script>
 </head>
 
-<body class="bg-rose-50 font-[Poppins] text-rose-500">
+<body class="bg-[#fbfaf7] text-focus-900 font-sans min-h-screen">
+<div class="flex flex-col md:flex-row min-h-screen">
 
-<div class="flex min-h-screen">
-
-<!-- SIDEBAR -->
-<aside class="w-64 bg-white p-8 shadow-xl border-r border-rose-100 text-rose-500">
-
-    <div class="mb-6 flex flex-col items-center">
-
+  <!-- SIDEBAR -->
+  <aside class="w-full md:w-64 bg-white p-6 shadow-xl border-r border-focus-100 flex flex-col justify-between">
+    <div>
+      <div class="mb-8 flex flex-col items-center">
         <img 
             src="images/logo.png.png" 
             alt="FocusFuel Logo"
-            class="w-80 h-auto drop-shadow-md"
+            class="w-48 h-auto drop-shadow-sm hover:scale-105 transition-all duration-300"
         >
+      </div>
 
+      <nav class="space-y-2">
+        <div id="nav-dashboard"
+            class="flex items-center gap-3 p-3 bg-focus-100 text-focus-800 font-semibold rounded-xl cursor-pointer shadow-sm border-l-4 border-focus-600 transition-all duration-200"
+            onclick="showSection('dashboard')">
+            <i data-lucide="layout-dashboard" class="w-5 h-5 text-focus-600"></i>
+            <span>Dashboard</span>
+        </div>
+
+        <div id="nav-recommendations"
+            class="flex items-center gap-3 p-3 text-focus-600 hover:bg-focus-100/50 hover:text-focus-700 rounded-xl cursor-pointer transition-all duration-200"
+            onclick="showSection('recommendations')">
+            <i data-lucide="compass" class="w-5 h-5"></i>
+            <span>Recommendations</span>
+        </div>
+
+        <div id="nav-history"
+            class="flex items-center gap-3 p-3 text-focus-600 hover:bg-focus-100/50 hover:text-focus-700 rounded-xl cursor-pointer transition-all duration-200"
+            onclick="showSection('history')">
+            <i data-lucide="clock" class="w-5 h-5"></i>
+            <span>History Log</span>
+        </div>
+      </nav>
     </div>
 
-   <nav class="space-y-4">
-
-    <div id="nav-dashboard"
-        class="flex items-center gap-3 p-3 bg-rose-100 rounded-xl cursor-pointer text-rose-500"
-        onclick="showSection('dashboard')">
-        <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
-        Dashboard
+    <!-- Motivational sidebar footer -->
+    <div class="mt-8 p-4 bg-focus-50 rounded-2xl border border-focus-100 text-center">
+      <i data-lucide="heart" class="w-5 h-5 text-fuel-500 mx-auto mb-2 animate-pulse"></i>
+      <p class="text-xs text-focus-700 font-medium">Sustainable productivity is about balance, not burnout. Take care of yourself today!</p>
     </div>
+  </aside>
 
+  <!-- MAIN CONTENT -->
+  <main class="flex-1 p-6 md:p-10 max-w-7xl">
     
-    <div id="nav-recommendations"
-        class="flex items-center gap-3 p-3 hover:bg-rose-50 rounded-xl cursor-pointer text-rose-400"
-        onclick="showSection('recommendations')">
-        <i data-lucide="compass" class="w-5 h-5"></i>
-        Recommendations
-    </div>
-
-    <div id="nav-history"
-        class="flex items-center gap-3 p-3 hover:bg-rose-50 rounded-xl cursor-pointer text-rose-400"
-        onclick="showSection('history')">
-        <i data-lucide="clock" class="w-5 h-5"></i>
-        History
-    </div>
-
-</nav>
-</aside>
-
-<!-- MAIN CONTENT -->
-<main class="flex-1 p-10 max-w-7xl">
-
-    <div class="mb-8">
-        <h2 class="text-4xl font-bold bg-gradient-to-r from-rose-400 via-pink-400 to-orange-300 bg-clip-text text-transparent">
-            Student Productivity Dashboard
-        </h2>
-
-        <p class="text-rose-400 mt-2">
-            Monitor your study habits and avoid burnout.
+    <!-- Top Greeting Bar -->
+    <div class="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-focus-100 pb-6">
+      <div>
+        <h1 class="text-4xl font-extrabold tracking-tight bg-gradient-to-r from-focus-700 via-focus-600 to-fuel-600 bg-clip-text text-transparent">
+          Student Focus & Recovery Cabin
+        </h1>
+        <p class="text-focus-500 mt-1 text-sm md:text-base font-medium">
+          Check in on your daily energy levels, study habits, and rest allocation.
         </p>
+      </div>
+      <!-- Decorative wellness badge -->
+      <div class="bg-fuel-50 border border-fuel-100 rounded-full px-4 py-2 flex items-center gap-2 self-start md:self-center">
+        <span class="w-2.5 h-2.5 rounded-full bg-fuel-500 animate-ping"></span>
+        <span class="text-xs text-fuel-700 font-semibold uppercase tracking-wider">Mindful Mode Active</span>
+      </div>
     </div>
 
-    <section id="dashboardSection">
+    <!-- DASHBOARD SECTION -->
+    <section id="dashboardSection" class="transition-all duration-300">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        
+        <!-- LOG TODAY'S FUEL FORM -->
+        <div class="lg:col-span-7 bg-white p-6 md:p-8 rounded-3xl border border-focus-100 shadow-sm glass-panel flex flex-col justify-between">
+          <div>
+            <div class="flex items-center gap-3 mb-6">
+              <div class="p-2.5 bg-fuel-100 text-fuel-600 rounded-2xl">
+                <i data-lucide="gauge" class="w-6 h-6"></i>
+              </div>
+              <div>
+                <h2 class="text-xl font-bold text-focus-800">Log Today's Fuel</h2>
+                <p class="text-xs text-focus-500">Reflect on your day to generate a personalized focus report.</p>
+              </div>
+            </div>
 
-        <div class="bg-white p-6 rounded-3xl shadow-lg mb-6 border border-rose-100">
+            <!-- Input Fields Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-6">
+              
+              <!-- Study Hours -->
+              <div class="focus-input-group p-4 bg-focus-50/50 hover:bg-focus-50 rounded-2xl border border-focus-100/80 transition-all duration-200">
+                <label class="block text-xs font-semibold text-focus-600 uppercase tracking-wider mb-2 flex items-center gap-2">
+                  <i data-lucide="book-open" class="w-4 h-4 text-focus-600"></i>
+                  Study Hours
+                </label>
+                <input id="studyHours" type="number" min="0" placeholder="e.g. 5"
+                    class="w-full text-lg font-bold text-focus-800 bg-transparent placeholder-focus-300 focus:outline-none">
+                <span class="text-[10px] text-focus-400 block mt-1">Recommended target: 4-6h daily</span>
+              </div>
 
-            <h2 class="text-2xl font-bold mb-6 bg-gradient-to-r from-rose-400 via-pink-400 to-orange-300 bg-clip-text text-transparent">
-                Log Today's Study Data
-            </h2>
+              <!-- Sleep Hours -->
+              <div class="focus-input-group p-4 bg-focus-50/50 hover:bg-focus-50 rounded-2xl border border-focus-100/80 transition-all duration-200">
+                <label class="block text-xs font-semibold text-focus-600 uppercase tracking-wider mb-2 flex items-center gap-2">
+                  <i data-lucide="moon" class="w-4 h-4 text-focus-600"></i>
+                  Sleep Hours
+                </label>
+                <input id="sleepHours" type="number" min="0" placeholder="e.g. 8"
+                    class="w-full text-lg font-bold text-focus-800 bg-transparent placeholder-focus-300 focus:outline-none">
+                <span class="text-[10px] text-focus-400 block mt-1">Recovery target: 7-9h daily</span>
+              </div>
 
-            <input id="studyHours" type="number" placeholder="Study Hours"
-                class="w-full p-4 border border-rose-100 mb-4 rounded-2xl focus:outline-none focus:ring-2 focus:ring-rose-300 bg-rose-50 placeholder-rose-300">
+              <!-- Breaks Taken -->
+              <div class="focus-input-group p-4 bg-focus-50/50 hover:bg-focus-50 rounded-2xl border border-focus-100/80 transition-all duration-200">
+                <label class="block text-xs font-semibold text-focus-600 uppercase tracking-wider mb-2 flex items-center gap-2">
+                  <i data-lucide="coffee" class="w-4 h-4 text-focus-600"></i>
+                  Breaks Taken
+                </label>
+                <input id="breaksTaken" type="number" min="0" placeholder="e.g. 4"
+                    class="w-full text-lg font-bold text-focus-800 bg-transparent placeholder-focus-300 focus:outline-none">
+                <span class="text-[10px] text-focus-400 block mt-1">Rest and stretch every 90 mins</span>
+              </div>
 
-            <input id="sleepHours" type="number" placeholder="Sleep Hours"
-                class="w-full p-4 border border-rose-100 mb-4 rounded-2xl focus:outline-none focus:ring-2 focus:ring-rose-300 bg-rose-50 placeholder-rose-300">
+              <!-- Stress Level -->
+              <div class="focus-input-group p-4 bg-focus-50/50 hover:bg-focus-50 rounded-2xl border border-focus-100/80 transition-all duration-200">
+                <label class="block text-xs font-semibold text-focus-600 uppercase tracking-wider mb-2 flex items-center gap-2">
+                  <i data-lucide="activity" class="w-4 h-4 text-focus-600"></i>
+                  Stress Level
+                </label>
+                <input id="stressLevel" type="number" min="0" max="10" placeholder="Scale: 1 to 10"
+                    class="w-full text-lg font-bold text-focus-800 bg-transparent placeholder-focus-300 focus:outline-none">
+                <span class="text-[10px] text-focus-400 block mt-1">Stress intensity: 1 (calm) - 10 (burnout)</span>
+              </div>
 
-            <input id="breaksTaken" type="number" placeholder="Breaks Taken"
-                class="w-full p-4 border border-rose-100 mb-4 rounded-2xl focus:outline-none focus:ring-2 focus:ring-rose-300 bg-rose-50 placeholder-rose-300">
+            </div>
+          </div>
 
-            <input id="stressLevel" type="number" placeholder="Stress Level"
-                class="w-full p-4 border border-rose-100 mb-4 rounded-2xl focus:outline-none focus:ring-2 focus:ring-rose-300 bg-rose-50 placeholder-rose-300">
+          <button id="analyzeBtn"
+              class="w-full bg-gradient-to-r from-focus-600 to-focus-700 text-white font-bold p-4 rounded-2xl hover:from-focus-700 hover:to-focus-800 transition duration-300 shadow-md hover:shadow-lg flex items-center justify-center gap-2 transform active:scale-[0.98]">
+              <i data-lucide="sparkles" class="w-5 h-5"></i>
+              Analyze My Day
+          </button>
+        </div>
 
-            <button id="analyzeBtn"
-                class="bg-rose-400 text-white px-8 py-4 rounded-2xl hover:bg-rose-500 transition shadow-lg hover:scale-105">
-                Analyze My Day
-            </button>
+        <!-- CURRENT STATUS REPORT PANEL -->
+        <div class="lg:col-span-5 flex flex-col gap-6 justify-between">
+          
+          <!-- Burnout Risk Card -->
+          <div class="bg-white p-6 rounded-3xl border border-focus-100 shadow-sm flex items-center justify-between gap-4">
+            <div class="flex items-center gap-4">
+              <div id="burnoutIconBox" class="p-3 bg-focus-50 text-focus-600 rounded-2xl transition-all duration-300">
+                <i id="burnoutIcon" data-lucide="shield-check" class="w-7 h-7"></i>
+              </div>
+              <div>
+                <h3 class="text-xs font-bold text-focus-500 uppercase tracking-wider">Burnout Risk</h3>
+                <p id="burnoutOutput" class="text-2xl font-black text-focus-800 mt-0.5">-</p>
+              </div>
+            </div>
+            <!-- Custom Pulse Dot Indicator -->
+            <div id="burnoutDot" class="w-3.5 h-3.5 rounded-full bg-gray-300"></div>
+          </div>
+
+          <!-- Productivity score Fuel Tank -->
+          <div class="bg-white p-6 rounded-3xl border border-focus-100 shadow-sm flex flex-col gap-4">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <div class="p-2 bg-fuel-50 text-fuel-500 rounded-xl">
+                  <i data-lucide="zap" class="w-5 h-5"></i>
+                </div>
+                <h3 class="text-xs font-bold text-focus-500 uppercase tracking-wider">Productivity Score</h3>
+              </div>
+              <p id="productivityOutput" class="text-2xl font-black text-fuel-600">-</p>
+            </div>
+            <!-- Beautiful horizontal fuel progress bar -->
+            <div class="w-full bg-focus-100 h-4 rounded-full overflow-hidden p-0.5 border border-focus-100/50">
+              <div id="productivityBar" class="bg-gradient-to-r from-fuel-400 to-fuel-500 h-full rounded-full transition-all duration-500 w-0 fuel-glow"></div>
+            </div>
+            <p class="text-[10px] text-focus-400 mt-1 flex justify-between">
+              <span>0% Empty</span>
+              <span>100% Fully Fueled</span>
+            </p>
+          </div>
+
+          <!-- Logged Study Hours Card -->
+          <div class="bg-white p-6 rounded-3xl border border-focus-100 shadow-sm flex items-center justify-between gap-4">
+            <div class="flex items-center gap-4">
+              <div class="p-3 bg-focus-100 text-focus-600 rounded-2xl">
+                <i data-lucide="graduation-cap" class="w-7 h-7"></i>
+              </div>
+              <div>
+                <h3 class="text-xs font-bold text-focus-500 uppercase tracking-wider">Study Hours Logged</h3>
+                <p id="studyOutput" class="text-2xl font-black text-focus-800 mt-0.5">-</p>
+              </div>
+            </div>
+            <i data-lucide="arrow-up-right" class="w-5 h-5 text-focus-300"></i>
+          </div>
 
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      </div>
+    </section>
 
-            <div class="bg-white p-6 rounded-3xl shadow-lg hover:shadow-xl transition border border-rose-100">
-                <h3 class="text-rose-400 text-sm">Burnout Risk</h3>
-                <p id="burnoutOutput" class="text-3xl font-bold mt-3">-</p>
+    <!-- RECOMMENDATIONS SECTION -->
+    <section id="recommendationsSection" class="hidden transition-all duration-300">
+      <div class="bg-white p-6 md:p-8 rounded-3xl border border-focus-100 shadow-sm glass-panel max-w-4xl mx-auto">
+        <div class="flex items-center gap-3.5 mb-6 border-b border-focus-100 pb-4">
+          <div class="p-3 bg-focus-100 text-focus-600 rounded-2xl">
+            <i data-lucide="lightbulb" class="w-6 h-6 animate-pulse"></i>
+          </div>
+          <div>
+            <h2 class="text-2xl font-bold text-focus-800">Daily Focus & Recovery Guide</h2>
+            <p class="text-xs text-focus-500">Intelligent wellbeing insights compiled from your daily stress and recovery inputs.</p>
+          </div>
+        </div>
+        
+        <div class="p-6 bg-focus-50/80 rounded-2xl border border-focus-100 flex items-start gap-4">
+          <i data-lucide="message-square" class="w-6 h-6 text-focus-500 mt-1 flex-shrink-0"></i>
+          <p id="recommendationOutput" class="text-focus-700 text-lg leading-relaxed font-medium font-sans">Please submit your daily log on the dashboard to see recommendations.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- HISTORY SECTION -->
+    <section id="historySection" class="hidden transition-all duration-300">
+      <div class="bg-white p-6 md:p-8 rounded-3xl border border-focus-100 shadow-sm glass-panel">
+        <div class="flex items-center justify-between mb-6 border-b border-focus-100 pb-4">
+          <div class="flex items-center gap-3.5">
+            <div class="p-3 bg-focus-100 text-focus-600 rounded-2xl">
+              <i data-lucide="calendar" class="w-6 h-6"></i>
             </div>
-
-            <div class="bg-white p-6 rounded-3xl shadow-lg hover:shadow-xl transition border border-rose-100">
-                <h3 class="text-rose-400 text-sm">Productivity Score</h3>
-                <p id="productivityOutput" class="text-3xl font-bold mt-3">-</p>
+            <div>
+              <h2 class="text-2xl font-bold text-focus-800">Your Reflection Journal</h2>
+              <p class="text-xs text-focus-500">Track and review your study levels, sleep logs, and stress metrics over time.</p>
             </div>
-
-            <div class="bg-white p-6 rounded-3xl shadow-lg hover:shadow-xl transition border border-rose-100">
-                <h3 class="text-rose-400 text-sm">Study Hours</h3>
-                <p id="studyOutput" class="text-3xl font-bold mt-3">-</p>
-            </div>
-
+          </div>
         </div>
 
+        <div id="historyOutput" class="space-y-4 max-h-[600px] overflow-y-auto pr-2">
+          <!-- Timelines will be rendered here -->
+        </div>
+      </div>
     </section>
 
-    <section id="recommendationsSection" class="hidden bg-white p-8 rounded-2xl shadow-md border border-rose-100">
-        <h2 class="text-2xl font-bold mb-4">Recommendations</h2>
-        <p id="recommendationOutput">-</p>
-    </section>
-
-    <section id="historySection" class="hidden bg-white p-8 rounded-2xl shadow-md border border-rose-100">
-        <h2 class="text-2xl font-bold mb-4">Recent Logs</h2>
-        <p id="historyOutput"></p>
-    </section>
-
-</main>
+  </main>
 
 </div>
 
-
 <script>
+    // Initialize icons
     lucide.createIcons();
 </script>
 
@@ -138,18 +308,26 @@
 
 <script>
 function showSection(section) {
-
     document.getElementById("dashboardSection").classList.add("hidden");
     document.getElementById("recommendationsSection").classList.add("hidden");
     document.getElementById("historySection").classList.add("hidden");
 
     document.getElementById(section + "Section").classList.remove("hidden");
 
-    document.getElementById("nav-dashboard").classList.remove("bg-rose-100");
-    document.getElementById("nav-recommendations").classList.remove("bg-rose-100");
-    document.getElementById("nav-history").classList.remove("bg-rose-100");
+    // Reset all nav tabs to inactive state
+    const navIds = ["dashboard", "recommendations", "history"];
+    navIds.forEach(id => {
+        const navEl = document.getElementById("nav-" + id);
+        if (navEl) {
+            navEl.className = "flex items-center gap-3 p-3 text-focus-600 hover:bg-focus-100/50 hover:text-focus-700 rounded-xl cursor-pointer transition-all duration-200";
+        }
+    });
 
-    document.getElementById("nav-" + section).classList.add("bg-rose-100");
+    // Highlight active nav tab
+    const activeNav = document.getElementById("nav-" + section);
+    if (activeNav) {
+        activeNav.className = "flex items-center gap-3 p-3 bg-focus-100 text-focus-800 font-semibold rounded-xl cursor-pointer shadow-sm border-l-4 border-focus-600 transition-all duration-200";
+    }
 }
 </script>
 
