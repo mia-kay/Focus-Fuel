@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:5000/api/logs";
+const API_URL = "https://focus-fuel-backend.onrender.com/api/logs";
 
 document.getElementById("analyzeBtn").addEventListener("click", function () {
     const studyHoursInput = document.getElementById("studyHours").value.trim();
